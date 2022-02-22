@@ -1,0 +1,125 @@
+# This an example TCL script for wrapping TKproE with freeWrap.
+#
+# Author: Dennis R. LaBelle
+# Date  : April 21, 2021
+#
+proc main {} {
+# Call this procedure to wrap TKproE and create the binary files.
+global flist
+
+catch {console show}
+cd [file dir [info script]]
+array unset flist
+
+# TKproE revision number, with and without the decimal point.
+set Rev 230
+set RevDot 2.30
+
+# Specify the directory path containing the copies of freeWrap supporting
+#   Linux 32-bit
+#   Linux 64-bit
+#   Windows 32-bit
+#   Windows 64-bit
+#
+# This script expects to find the freeWrap applications under
+#   FWdir/linux32
+#   FWdir/linux64
+#   FWdir/win32
+#   FWdir/win64
+# TKproE will be wrapped with only those versions of freeWrap that exist in
+# these locations. No error occurs if the freeWrap version is not found.
+set FWdir /share/pdisk1/freeWrap/freewrap674
+#LISSI
+set FWdir /home/a513/ORLOV/TK_Tcl/Project/FREEWRAP/TCLEXECOMP/freewrap674
+
+file mkdir build
+set zipcmd [auto_execok zip]
+
+# Create the list of files in the distribution
+set fileList {}
+lappend fileList docs/INSTALL
+lappend fileList docs/README
+lappend fileList docs/TKproEdocs.pdf
+lappend fileList docs/tkproe_docs_dir.txt
+lappend fileList lib/icons/tkIcons-sample.crystal
+lappend fileList lib/icons/tkIcons-sample.ikons
+lappend fileList lib/icons/tkIcons-sample.kde
+lappend fileList lib/icons/tkIcons-sample.klassic
+lappend fileList lib/icons/tkIcons-sample.silk
+lappend fileList lib/icons/tkIcons-sample.slick
+lappend fileList lib/icons/tkIcons.crystal
+lappend fileList lib/icons/tkIcons.eda
+lappend fileList lib/icons/tkIcons.ikons
+lappend fileList lib/icons/tkIcons.kde
+lappend fileList lib/icons/tkIcons.klassic
+lappend fileList lib/icons/tkIcons.sat
+lappend fileList lib/icons/tkIcons.slick
+lappend fileList lib/tkproe_lib_dir.txt
+lappend fileList templates/calendar.tcl
+lappend fileList templates/CanvasLS.tcl
+lappend fileList templates/CanvasRS.tcl
+lappend fileList templates/EntryL.tcl
+lappend fileList templates/EntryLS.tcl
+lappend fileList templates/EntryS.tcl
+lappend fileList templates/ListboxLS.tcl
+lappend fileList templates/ListboxRS.tcl
+lappend fileList templates/TextLS.tcl
+lappend fileList templates/TextRO.tcl
+lappend fileList templates/TextROLS.tcl
+lappend fileList templates/TextRORS.tcl
+lappend fileList templates/TextRS.tcl
+lappend fileList templates/Tktable.tcl
+lappend fileList templates/tkproe_templates_dir.txt
+set FileLoadList [file join [pwd] tkproe_filelist.txt]
+set fout [open $FileLoadList w]
+foreach fname $fileList {
+        puts $fout $fname
+      }
+close $fout
+
+# Package source code distribution
+puts "Generating source code distribution for TKproE [string index $Rev 0].[string range $Rev 1 end]"
+update
+
+# Save the current directory and change to the TKproE directory that will be packaged.
+set topDir [pwd]
+set revDir $topDir/$RevDot
+cd $revDir
+set outfile ../build/tkproe${Rev}_script.zip
+file delete $outfile
+#LISSI
+#exec csh -c "$zipcmd -r $outfile tkproe.tcl docs/Package_TKproE.txt docs/INSTALL docs/README docs/TKproEdocs.pdf docs/tkproe_docs_dir.txt lib/* templates/*"
+exec csh -c "$zipcmd -r $outfile tkproe.tcl selectGroupMode.tcl docs/Package_TKproE.txt docs/INSTALL docs/README docs/TKproEdocs.pdf docs/tkproe_docs_dir.txt lib/* templates/*"
+
+# Remove old copies of the binary distributions.
+file delete ../build/tkproe${Rev}_linux.zip
+file delete ../build/tkproe${Rev}_windows.zip
+
+# Wrap/create the binary distributions.
+set icoFile [file join $topDir Logo TKproE_logo.ico]
+set curOS linux64
+set curFW [file join $FWdir $curOS freewrap]
+foreach {targetOS OSext} {linux32 {} linux64 {} win32 .exe win64 .exe} {
+        set targetFW [file join $FWdir $targetOS freewrap$OSext]
+        if {[file isfile $targetFW]} {
+            puts "Creating binary TKproE distribution for $targetOS"
+            update
+            # Wrap TKproE.
+            set OutFile [file join $topDir build tkproe$targetOS$OSext]
+            if {$targetOS in {win32 win64}} {
+                exec $curFW tkproe.tcl selectGroupMode.tcl -o $OutFile -f $FileLoadList -w $targetFW -i $icoFile
+            } { exec $curFW tkproe.tcl selectGroupMode.tcl -o $OutFile -f $FileLoadList -w $targetFW }
+            # Create the distribution package.
+            if {$targetOS in {win32 win64}} {
+                set outfile ../build/tkproe${Rev}_windows.zip
+               } { set outfile ../build/tkproe${Rev}_linux.zip }
+            cd $topDir/build
+            exec $zipcmd -m $outfile [file tail $OutFile]
+            cd $revDir
+            exec $zipcmd $outfile docs/INSTALL docs/README docs/TKproEdocs.pdf
+           }
+	  }
+cd $topDir
+}
+
+main

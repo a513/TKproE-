@@ -1,0 +1,44 @@
+This message announces a new release of the TCL/TK programming Environment (TKproE 2.30).
+
+TKproE is an integrated program development environment for the TCL/TK scripting language. TKproE, itself, is completely written in the TCL/TK language.
+
+TKproE supports the rapid development of sophisticated graphical user interfaces. TKproE takes advantage of TK, a widget set that is accessible through TCL, a very efficient interpreted programming language. With TKproE the user can build or modify application programs while they are running. This makes it possible to test program changes immediately without the cost of compiling the application.
+
+TKproE is an Open Source product.
+
+TKproE 2.30 requires TCL/TK 8.6 or later.
+
+TKproE consists of a single TCL script file (with supporting icons and templates) that can run on Linux or Windows operating systems. 
+
+TKproE has also been packaged as a binary application and can now directly generate platform specific binary programs for Linux and Windows. This was accomplished by wrapping TKproE using freeWrap version 6.74.
+
+Please visit the TKproE home page:
+
+          http://tkproe.sourceforge.net
+
+
+Changes implemented in version 2.30
+------------------------------------
+1. TKproE is now distributed as both binary executable programs and as a script. Binary files for 32-bit and 64-bit Linux and Windows are available. However, TKproE can still be run as a script using your own TCL/TK installation.
+2. Revised the TKproE logo.
+3. On the TKproE general options window
+   a) added an option asking whether global variable values should be saved.
+   b) added an option to specify the default directory in which the cutbuffer should be saved (for building templates).
+4. Modified TKproE so that saved output is more repeatable. That is, the program will attempt to output all objects in the same order each time the project is saved. This makes it easier to compare different versions of an application using a difference tool.
+5. In the TKProE generated code, images are now defined within the new TPinitImages procedure.
+6. Removed some inactive code which was used to support the BLT extension in the past.
+7. Modified TKproE code to support wrapping with freeWrap.
+8. TKproE can now be used to convert your TCL/TK script to a binary application file by using the new Build option of the main menu.
+9. The folowing bugs were fixed:
+   a) TKproE can now properly handle spaces in the name of the application file.
+   b) The variable "tphelpmsg" is no longer (inappropriately) saved with a user's application. The tphelpmsg variable is generated for use within TKproE itself and is not part of the user's application.
+   c) Eliminated a situation where some images used by TKproE were also saved to an application file.
+   d) The TKproE image selection window no longers lists image names used by TKproE.
+   e) The TKproE canvas configuration window no longer lists "current" as one of the tags for a selected object. This prevents saving the canvas item with a tag value of "current" which should only be set by TK itself.
+   f) The "angle" property of text canvas items can now be set and saved properly.
+   g) Bindings on canvas items are now saved to disk.
+   h) Corrections were made to the functionality of the gridder configuration dialog box.
+   i) The .__tk_choosdir toplevel window (created when tk_chooseDirectory command is used) is no longer saved to the user application.
+   j) Extra images created by the TK commands tk_chooseDirectory, tk_getOpenFile, and tk_getSaveFile are no longer saved to the user application.
+   k) The default TK fonts are no longer deleted at TKproE startup.
+

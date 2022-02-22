@@ -1,0 +1,16 @@
+Installing TKproE
+=================
+TKproE is distributed in both binary and source code formats. 
+
+Source code version
+-------------------
+TKproE installation is performed by extracting the distribution archive into a directory of your choosing. The subdirectory structure within the archive is expected by TKproE and should be maintained.
+
+You will need the TCL/TK windowing shell (wish) installed on your system in order to run TKproE.
+
+
+Binary (wrapped) versions
+-------------------------
+TKproE installation is performed by extracting the distribution archive for your operating system into a directory of your choosing.
+
+The name of the executable file indicates whether the program is for a 32-bit or 64-bit version of the operating system.
