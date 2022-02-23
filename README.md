@@ -1,4 +1,4 @@
-TKproEplus is a modified TKproE-2.30
+[TKproEplus](https://habr.com/ru/post/653129/) is a modified TKproE-2.30
 
 Programmer: [Dennis R. LaBelle](https://sourceforge.net/projects/tkproe/files/tkproe/TKproE%202.30/)
 
